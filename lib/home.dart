@@ -1,50 +1,103 @@
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title, this.uid}) : super(key: key);
-  final String title;
-  final double uid;
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-// StatelessWidget is @immutable => requires final attributes
 class _HomePageState extends State<HomePage> {
-  // @override overrides default app build method
-  // returns Scaffold obj containing main page with button choices
+  @override
+  initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    var media = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
       ),
-      body: Container(
-        color: Colors.white,
-        padding: const EdgeInsets.all(50.0),
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text("MedWallet", style: TextStyle(fontSize: 55.0)),
-              SizedBox(
-                width: 100.0,
-                child: Image.asset(
-                  './assets/brain.png',
-                  fit: BoxFit.contain,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: media.width > 375
+              ? MainAxisAlignment.start
+              : MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Text(
+                  "MedWallet",
+                  style: TextStyle(
+                    fontSize: media.width > 375 ? 50.0 : 75.0,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
+                SizedBox(
+                  child: Image.asset(
+                    'asset/medwallet_logo.png',
+                    fit: BoxFit.contain,
+                    width: media.width > 375 ? 125.0 : 180.0,
+                  ),
+                ),
+                SizedBox(height: media.width > 375 ? 5.0 : 20.0),
+                Text(
+                  'Digital credentials for the modern medical professional',
+                  textAlign: TextAlign.center,
+                  softWrap: true,
+                  style: TextStyle(
+                    fontStyle: FontStyle.italic,
+                    fontSize: media.width > 375 ? 15.0 : 20.0,
+                    color: Colors.black,
+                    wordSpacing: 1.0,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Container(
+          height: media.width > 375 ? 75.0 : 150.0,
+          child: ButtonBar(
+            alignment: MainAxisAlignment.center,
+            children: <Widget>[
               RaisedButton(
-                padding: const EdgeInsets.fromLTRB(50.0, 0, 50.0, 0),
-                child: Text('Login'),
+                padding: media.width > 375
+                    ? EdgeInsets.only(
+                        top: 10.0, bottom: 10.0, left: 60.0, right: 60.0)
+                    : EdgeInsets.only(
+                        top: 15.0, bottom: 15.0, left: 55.0, right: 55.0),
+                child: Text('Login',
+                    style: TextStyle(
+                        fontSize: media.width > 375 ? 15 : 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold)),
+                color: Theme.of(context).primaryColor,
                 onPressed: () {
-                  Navigator.pushNamed(context, '/login');
+                  setState(() {
+                    Navigator.pushNamed(context, '/login');
+                  });
                 },
               ),
               RaisedButton(
-                padding: const EdgeInsets.fromLTRB(40.0, 0, 40.0, 0),
-                child: Text('Register'),
+                padding: media.width > 375
+                    ? EdgeInsets.only(
+                        top: 10.0, bottom: 10.0, left: 50.0, right: 50.0)
+                    : EdgeInsets.only(
+                        top: 15.0, bottom: 15.0, left: 45.0, right: 45.0),
+                child: Text('Register',
+                    style: TextStyle(
+                        fontSize: media.width > 375 ? 15 : 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold)),
+                color: Theme.of(context).primaryColor,
                 onPressed: () {
-                  Navigator.pushNamed(context, '/register');
+                  setState(() {
+                    Navigator.pushNamed(context, '/register');
+                  });
                 },
               ),
             ],

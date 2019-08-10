@@ -1,4 +1,4 @@
-# app_medwallet
+# MedWallet
 
 A new Flutter project.
 

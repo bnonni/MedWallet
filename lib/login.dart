@@ -1,29 +1,37 @@
-import 'package:app_medwallet/user.dart';
+import 'package:MedWallet/user.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginForm extends StatefulWidget {
-  LoginForm({Key key}) : super(key: key);
+  LoginForm({Key key, this.title, this.uid}) : super(key: key);
+  final String title;
+  final double uid;
   @override
   _LoginFormState createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm> {
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
-  TextEditingController nameInputController;
   TextEditingController emailInputController;
   TextEditingController pwdInputController;
-  // FireBase currentuser;
+  final Firestore _firestore = Firestore.instance;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  FirebaseUser currentUser;
 
   String registerRoute = '/register';
 
   @override
   initState() {
-    nameInputController = new TextEditingController();
     emailInputController = new TextEditingController();
     pwdInputController = new TextEditingController();
+    this.getCurrentUser();
     super.initState();
+  }
+
+  void getCurrentUser() async {
+    currentUser = await FirebaseAuth.instance.currentUser();
   }
 
   String emailValidator(String value) {
@@ -60,11 +68,6 @@ class _LoginFormState extends State<LoginForm> {
                 children: <Widget>[
                   TextFormField(
                     decoration: InputDecoration(
-                        labelText: 'Full Name*', hintText: 'First Last'),
-                    controller: nameInputController,
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(
                         labelText: 'Email',
                         hintText: 'emailaddress@domain.com'),
                     controller: emailInputController,
@@ -84,28 +87,55 @@ class _LoginFormState extends State<LoginForm> {
                     textColor: Colors.white,
                     onPressed: () {
                       if (_loginFormKey.currentState.validate()) {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => UserPage(
-                                      title:
-                                          "Welcome " + nameInputController.text,
-                                      // uid: currentUser.uid,
-                                    )));
-                        // FirebaseAuth.instance
-                        //     .signInWithEmailAndPassword(
-                        //         email: emailInputController.text,
-                        //         password: pwdInputController.text)
-                        //     .then((currentUser) => Firestore.instance
-                        //         .collection('register')
-                        //         .document(nameInputController.text +
-                        //             '/' +
-                        //             currentUser.uid)
-                        //         .get()
-                        //         .then((DocumentSnapshot result) =>
-
-                        //         .catchError((err) => print(err)))
-                        //     .catchError((err) => print(err));
+                        _firebaseAuth
+                            .signInWithEmailAndPassword(
+                                email: emailInputController.text,
+                                password: pwdInputController.text)
+                            .then(
+                              (currentUser) => _firestore
+                                  .collection('users')
+                                  .document(currentUser.uid)
+                                  .get()
+                                  .then(
+                                    (DocumentSnapshot result) =>
+                                        Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            UserPage(uid: currentUser.uid),
+                                      ),
+                                    ),
+                                  ),
+                            )
+                            .catchError(
+                              (err) => showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CupertinoAlertDialog(
+                                    title: Text(
+                                      'Error',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.red),
+                                    ),
+                                    content: Text(
+                                      'Invalid email address. Please try again or register.',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.red),
+                                    ),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        child: Text('Close'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      )
+                                    ],
+                                  );
+                                },
+                              ),
+                            );
                       }
                     },
                   ),
@@ -121,31 +151,3 @@ class _LoginFormState extends State<LoginForm> {
             ))));
   }
 }
-/*
-class CurrentUser {
-  String email;
-  String name;
-  String password;
-  String uid;
-
-  UserRecord.fromMap(Map<dynamic, dynamic> data)
-      : email = data['email'],
-        name = data['name'],
-        password = data['password'],
-        uid = data['uid'];
-}
-
-class UserRecord {
-  String documentID;
-  List<CurrentUser> itemCounts = new List<CurrentUser>();
-
-  UserRecord.fromSnapshot(DocumentSnapshot snapshot)
-      : documentID = snapshot.documentID,
-        users = snapshot['users'],
-        user_data = snapshot['itemCount'].map<ItemCount>((item) {
-          return ItemCount.fromMap(item);
-        }).toList();
-
-  static fromMap(snapshot) {}
-}
-*/
