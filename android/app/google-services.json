@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "923966908243",
+    "firebase_url": "https://medwallet-3aeca.firebaseio.com",
+    "project_id": "medwallet-3aeca",
+    "storage_bucket": "medwallet-3aeca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:923966908243:android:44f23f59c78b555f",
+        "android_client_info": {
+          "package_name": "com.medwallet.medwalletapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "923966908243-9k5bcg8l8rga3svlncpkd88ug846c57q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5laNHoV8VtQGxDETLgjCTly_KJc_asYE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "923966908243-9k5bcg8l8rga3svlncpkd88ug846c57q.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "923966908243-rvbp2ch6e5u974tjvav78tsr5vmb4g9k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.medwallet.medwalletapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

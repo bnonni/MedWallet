@@ -1,4 +1,4 @@
-package com.example.app_medwallet;
+package com.medwallet.medwalletapp;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
